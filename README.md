@@ -1,3 +1,0 @@
-# CloudAcademyAlbedo
-
-## Getting Started 
