@@ -34,7 +34,15 @@ Download and unpack these `here <https://drive.google.com/drive/folders/1Helb2qJ
 	mv freedman CloudAcademyAlbedo/AlbedoCode/
 	mv opacities CloudAcademyAlbedo/AlbedoCode/
 
-4) Open up **FunWithAlbedoCode.ipynb** and follow the directions! 
+4) COMPILE!
+````````````
+
+.. code-block:: bash 
+
+	cd CloudAcademyAlbedo/AlbedoCode 
+	make
+
+5) Open up **FunWithAlbedoCode.ipynb** and follow the directions! 
 `````````````````````````````````````````````````````````````````
 
 .. code-block:: bash 
