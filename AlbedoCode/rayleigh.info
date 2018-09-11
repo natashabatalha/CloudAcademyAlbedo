@@ -1,0 +1,50 @@
+GINT2:
+C TWO STREAM SOURCE FUNTION METHOD WITH G2 TERM (SEE NOTES)
+C RAYLEIGH WHEN TAURAY LARGE, COSBAR (COSBV) --> 0 
+C AND GCOS2 --> 0.5 (SEE OPTCV WHERE THEY ARE DEFINED)
+
+C UBAR2 adjusted such that when TAURAY large, GEOMALB
+C approaches 0.75 (3/4) at short wavelengths as expected
+          UBAR2 = 0.767  ! FIT TO EXPECTED RAYLEIGH LIMIT
+          F1=1+1.5*COSBAR(J)*UBAR0
+     &  + GCOS2(J)*(3.*UBAR2*UBAR2*UBAR0*UBAR0 - 1.)/2.
+          F2=1-1.5*COSBAR(J)*UBAR0 
+     &  + GCOS2(J)*(3.*UBAR2*UBAR2*UBAR0*UBAR0 - 1.)/2.
+
+
+GINT3 :
+C TWO STREAM SOURCE FUNTION METHOD WITH G2 TERM SEE SNOOK AppE NOTES
+          UBAR2 = 0.767  ! FIT TO PURE RAYLEIGH LIMIT, ~(1/sqrt(3))^(1/2)
+            F1=1.+3*COSBAR(J)*UBAR1
+     &  + GCOS2(J)*(3.*UBAR2*UBAR2*UBAR1*UBAR1 - 1.)/2.
+          F2=1.-3*COSBAR(J)*UBAR1 
+     &  + GCOS2(J)*(3.*UBAR2*UBAR2*UBAR1*UBAR1 - 1.)/2.
+
+From egp.f:
+
+C2 RAYLEIGH
+C  Rayleigh scattering from K. Rages routine, see notes.
+        cfray = 32.d0*pi**3*1.d21/(3.d0*2.687d19)
+        taur = 0.0
+        gasss(1) = H2(J)
+        gasss(2) = HE(J)
+        gasss(3) = CH4(J)
+        cold = COLDEN(J)/(XMU(J)*1.661d-24)
+      do 2940 nn =1,3
+        tec = cfray*(dpol(nn)/wlni(k)**4)*(gnu(1,nn)+gnu(2,nn)/
+     1                       wlni(k)**2)**2
+        taur = taur + COLD*gasss(nn)* tec*1.d-5/XN0
+
+From subs_egp.f:
+
+        cfray = 32.*pi**3*1.e21/(3.*2.687e19)
+        TAURAY = 0.0
+        gasmtx(1) = aH2(J)
+        gasmtx(2) = aHE(J)
+        gasmtx(3) = aCH4(J)
+        cold = COLDEN(J)/(aXMU(J)*AMU)
+      do 2940 nn =1,3
+        tec = cfray*(dpol(nn)/wlnv(k)**4)*(gnu(1,nn)+gnu(2,nn)/
+     1                       wlnv(k)**2)**2
+        taur(nn) = COLD*gasmtx(nn)* tec*1.e-5/XN0
+        TAURAY = TAURAY + taur(nn)

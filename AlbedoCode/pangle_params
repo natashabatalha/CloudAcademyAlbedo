@@ -1,0 +1,12 @@
+      Integer NPHAS
+
+C planetary phase steps out of 180 degrees
+C go to pangle_data.f routine to set angles
+      PARAMETER (NPHAS=11)
+c      PARAMETER (NPHAS=19)
+c      PARAMETER (NPHAS=61)
+c      PARAMETER (NPHAS=37)
+c      PARAMETER (NPHAS=31)
+c      PARAMETER (NPHAS=25)
+c      PARAMETER (NPHAS=1)
+

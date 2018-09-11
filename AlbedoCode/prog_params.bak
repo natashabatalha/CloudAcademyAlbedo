@@ -1,0 +1,16 @@
+       Integer nlayer, nlevel, NTMPS
+       Integer NSPECI, NSPC1I, NSPECV, NSPEC1V, NTEMPS
+
+C      Maximum value of NLEVEL is 101 (unless reset NL)
+      PARAMETER (nlayer=60,nlevel=61)
+c      PARAMETER (nlayer=69,nlevel=70)
+c      PARAMETER (nlayer=96,nlevel=97)
+c      PARAMETER (nlayer=90,nlevel=91)
+      PARAMETER (NTMPS=291)
+C NLEVEL is the bottom layer
+
+      PARAMETER (NSPECI=56,NSPC1I=57,NSPECV=2000,NSPC1V=25,NTEMPS=14)
+      PARAMETER (UPCLD=18)
+
+
+

@@ -1,0 +1,8 @@
+Column 1 ->   model layer (corresponding to midpoints in PT space between the levels specified in the *.pt file)
+TMID=0.5d0*(TEMP(J)+TEMP(J+1)) 
+PMID=DSQRT(PRESS(J)*PRESS(J+1))
+
+Column 2 ->  wavelength bin (standard 196 wavelength bins)
+Column 3 ->  optical depth of the cloud/haze (at each layer and wavelength bin)
+Column 4 ->  asymmetry factor (g) of cloud/haze (at each layer and wavelength bin)
+Column 5 -> single scattering albedo of cloud/haze (wbar) (at each layer and wavelength bin)
