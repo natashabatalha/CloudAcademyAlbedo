@@ -17,13 +17,13 @@ Getting Started
 
 .. code-block:: bash 
 
-	pip install pandas numpy bokeh astropy scipy
+	pip install pandas numpy bokeh astropy scipy cython
 
 OR if you are conda user 
 
 .. code-block:: bash
 
-	conda install pandas numpy bokeh astropy scipy 
+	conda install pandas numpy bokeh astropy scipy cython
 
 3) Download zip files and put them in the right spot 
 ````````````````````````````````````````````````````
