@@ -7,7 +7,6 @@ import os
 from elements import ELEMENTS as ele 
 import collections
 from scipy.spatial import cKDTree
-import fortranformat as ff
 import subprocess 
 pd.options.mode.chained_assignment = None
 #top level albedo code file
