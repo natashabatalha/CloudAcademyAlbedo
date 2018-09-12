@@ -27,7 +27,7 @@ OR if you are conda user
 
 3) Download zip files and put them in the right spot 
 ````````````````````````````````````````````````````
-Download and unpack these `here <https://drive.google.com/drive/folders/1Helb2qJ1s_lJUIAJbZKhuUSnY8BHT_hD?usp=sharing>`_
+Download the two files `at this link <https://drive.google.com/drive/folders/1Helb2qJ1s_lJUIAJbZKhuUSnY8BHT_hD?usp=sharing>`_ by right clicking on each file to download the whole zip.
 
 .. code-block:: bash
 
@@ -48,5 +48,5 @@ Download and unpack these `here <https://drive.google.com/drive/folders/1Helb2qJ
 .. code-block:: bash 
 
 	cd CloudAcademyAlbedo
-	jupyter notebook
+	jupyter notebook FunWithAlbedoCode.ipynb
 
