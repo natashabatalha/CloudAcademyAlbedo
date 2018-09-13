@@ -2921,7 +2921,7 @@ c      endif
 
  	   do kt=1,ntemps3
 		do k=1,NSPECV
-	     if (WNOV(k+1).lt.freqmax) then
+	     if (WNOV(k).lt.freqmax) then
 		  j = 1
 		  do while (wnc(j).lt.WNOV(k)) 
 			j = j+1
