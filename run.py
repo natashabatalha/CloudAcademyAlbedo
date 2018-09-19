@@ -14,7 +14,7 @@ pd.options.mode.chained_assignment = None
 init = os.getcwd()
 path_to_alb_code = os.path.join(os.getcwd(),'AlbedoCode')
 import scipy.signal as scisig
-def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, output_path):
+def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, output_path, scale_ext=1):
 	"""
 	Top level code to take CH's output, convert to necessary input files for abledo code, 
 	and run the albedo code. 
@@ -31,8 +31,11 @@ def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, ou
 		Gravity in units of m/s2
 	output_path : str 
 		Where you want things to be saved to.  
+	scale_ext : float 
+		Default=1, this scaling factor is purely for learning purposes. It scales the total extinction by: 
+		new_extinction = scale_ext * old_extinction
 	"""
-	run = AlbedoCode(three_chem_files, extinction_file, albedo_file, gravity, output_path)
+	run = AlbedoCode(three_chem_files, extinction_file, albedo_file, gravity, output_path, scale_ext=scale_ext)
 	#makes first input file
 	run.make_input_pt()
 	#make ind file for indexing opacities 
@@ -74,12 +77,13 @@ def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, ou
 	return
 
 class AlbedoCode():
-	def __init__(self, three_chem_files, extinction_file, albedo_file, gravity, output_path):
+	def __init__(self, three_chem_files, extinction_file, albedo_file, gravity, output_path, scale_ext=1):
 		self.three_chem_files = three_chem_files
 		self.extinction_file = extinction_file
 		self.albedo_file = albedo_file
 		self.gravity = gravity
 		self.output_path = output_path
+		self.scale_ext = scale_ext
 
 	def make_input_pt(self):
 		"""
@@ -303,7 +307,7 @@ class AlbedoCode():
 		for i in range(50): 
 		    opd = 10**np.interp(np.log10(wave_196), np.log10(np.array([float(ii) for ii in new_ext.keys()])), np.log10(new_ext.iloc[i].values))
 		    alb = 10**np.interp(np.log10(wave_196), np.log10(np.array([float(ii) for ii in new_alb.keys()])), np.log10(new_alb.iloc[i].values))
-		    final_cld['Opd'].iloc[i*196:(i+1)*196] = opd
+		    final_cld['Opd'].iloc[i*196:(i+1)*196] = opd*self.scale_ext
 		    final_cld['w0'].iloc[i*196:(i+1)*196] = alb
 		final_cld=final_cld.fillna(0)
 
