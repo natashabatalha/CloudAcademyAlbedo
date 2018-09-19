@@ -8,11 +8,12 @@ from elements import ELEMENTS as ele
 import collections
 from scipy.spatial import cKDTree
 import subprocess 
+import shutil
 pd.options.mode.chained_assignment = None
 #top level albedo code file
 init = os.getcwd()
 path_to_alb_code = os.path.join(os.getcwd(),'AlbedoCode')
-
+import scipy.signal as scisig
 def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, output_path):
 	"""
 	Top level code to take CH's output, convert to necessary input files for abledo code, 
@@ -68,6 +69,7 @@ def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, ou
 			continue
 		phase = i[i.rfind('_')+1:i.find('.')]
 		alb = pd.read_csv(os.path.join(path_to_alb_code,'run',i), delim_whitespace=True,skiprows=3,usecols=[1,3])
+		alb['GEOMALB'] = scisig.medfilt(alb['GEOMALB'],kernel_size=3)
 		alb.to_csv(os.path.join(output_path,name+'_'+phase+'.dat'))
 	return
 
@@ -355,5 +357,70 @@ def get_weights(molecule):
         weights[i+add] = totmass
     return weights
 
+def jupiter(output_path, do_clouds=False, fsed=None , name=None):
+	"""
+	This runs a classic Jupiter example with different specifications for clouds. 
 
+	Parameters
+	----------
+	output_path : str 
+		path to output directory 
+	do_clouds : bool 
+		Turns on and off clouds (Default=False)
+	fsed : int 
+		Sedimentation efficiency. Options are [6, 3, 1]. Only used if do_clouds=True
+	name : str 
+		If you want to name the file something special: default = jupiter_nocloud, jupiter_cloud_6fsed
+
+	"""
+	#opacity index file
+	shutil.copy2(os.path.join(path_to_alb_code, 'inputs','jupiter','jupiter.ind'), 
+		os.path.join(path_to_alb_code, 'run','input.ind'))
+	#pt chem file
+	shutil.copy2(os.path.join(path_to_alb_code, 'inputs','jupiter','jupiter.pt'), 
+		os.path.join(path_to_alb_code, 'run','input.pt'))
+	#make input.cld 
+	if do_clouds:
+	#pt chem file
+		if fsed==None:
+			f = int(6)
+			print('Selecting Default Sedimentation efficiency= 6.0')
+		elif int(fsed) in [6,3,1]:
+			f = int(fsed)
+		else: 
+			raise Exception ('Only fsed=6,3,1 available on git, Email natasha.e.batalha@gmail for other profiles')
+
+		if name==None: name = 'jupiter_cloud_'+str(f)+'fsed'
+		shutil.copy2(os.path.join(path_to_alb_code, 'inputs','jupiter','f'+str(f)+'.cld'), 
+			os.path.join(path_to_alb_code, 'run','input.cld'))
+
+		do_clouds = str(int(do_clouds))
+
+	else: 
+		do_clouds = str(int(do_clouds))
+		if name==None: name = 'jupiter_nocloud'
+
+
+	inputs = os.path.join(path_to_alb_code, 'run', 'int.params')
+	input_bak = os.path.join(path_to_alb_code, 'run', 'int.params.bak')
+	with open(input_bak, 'r') as input_file, open(inputs, 'w') as out_file:
+		for line in input_file:
+			if line.find('DO_CLOUD=') != -1:
+				out_file.write('DO_CLOUD= '+str(int(do_clouds))+'\n')
+			else:
+				out_file.write(line)
+
+	#now you are ready to build the process 
+	#let's go to the albedo code 
+	os.chdir(os.path.join(path_to_alb_code,'run'))
+	subprocess.run(['./geom'],stdout=subprocess.DEVNULL)
+	os.chdir(init)
+
+	for i in os.listdir(os.path.join(path_to_alb_code,'run')):
+		if i.find('00_Spectral_Albedos') == -1: 
+			continue
+		phase = i[i.rfind('_')+1:i.find('.')]
+		alb = pd.read_csv(os.path.join(path_to_alb_code,'run',i), delim_whitespace=True,skiprows=3,usecols=[1,3])
+		alb['GEOMALB'] = scisig.medfilt(alb['GEOMALB'],kernel_size=3)
+		alb.to_csv(os.path.join(output_path,name+'_'+phase+'.dat'))
 
