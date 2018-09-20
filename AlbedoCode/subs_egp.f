@@ -2871,7 +2871,7 @@ C has been removed.
 
 C Read info from a file
 C
-      open (8,file='../inputs/H2CIA.DAT')
+      open (8,file='../inputs/H2CIA.dat')
       read (8,*) idum1, idum2
 
       if (idum2.ne.ntemps3) then
