@@ -14,11 +14,15 @@ pd.options.mode.chained_assignment = None
 init = os.getcwd()
 path_to_alb_code = os.path.join(os.getcwd(),'AlbedoCode')
 import scipy.signal as scisig
-def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, output_path, scale_ext=1):
+def run_albedo(do_clouds, three_chem_files, extinction_file, albedo_file, gravity, name, output_path, scale_ext=1):
 	"""
 	Top level code to take CH's output, convert to necessary input files for abledo code, 
 	and run the albedo code. 
 
+	Parameters
+	----------
+	do_clouds : bool 
+		Turn on and off clouds
 	three_chem_files : list of str 
 		CH should provide you with three chemistry files. Put them here in list form in any order.
 	extinction_file : str 
@@ -43,14 +47,17 @@ def run_albedo(three_chem_files, extinction_file, albedo_file, gravity, name, ou
 		ind_file = os.path.join(path_to_alb_code, 'run','input.ind'))
 
 	#make input.cld 
-	try:
-		os.path.exists(extinction_file)
+	if do_clouds:
+		try:
+			os.path.exists(extinction_file)
+		except: 
+			raise Exception("No Extinction_file Found, Running Cloud Free Case")
+			
 		run.make_input_cld()
-		do_clouds = str(int(True))
+		do_clouds = str(int(do_clouds))
 		#run if cloud free is specified 
-	except: 
-		do_clouds = str(int(False))
-		print("No Extinction_file Found, Running Cloud Free Case")
+	else: 
+		do_clouds = str(int(do_clouds))
 
 	inputs = os.path.join(path_to_alb_code, 'run', 'int.params')
 	input_bak = os.path.join(path_to_alb_code, 'run', 'int.params.bak')
