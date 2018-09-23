@@ -249,7 +249,7 @@ class AlbedoCode():
 		self.standard_pt.rename(columns={'TIO':'TiO'}, inplace=True)
 		gas_weights = pd.DataFrame(get_weights(list(self.standard_pt.keys())[4:]),index=[0])
 		mixingratios = self.standard_pt[sorted(list(self.standard_pt.keys())[4:])]
-		mu_atm = pd.Series(np.dot(gas_weights.as_matrix(),mixingratios.as_matrix().transpose())[0], index=self.standard_pt['P'])
+		mu_atm = pd.Series(np.dot(gas_weights.values.as_matrix(),mixingratios.values.as_matrix().transpose())[0], index=self.standard_pt['P'])
 		#CONVERT TO GRAMS BC CH'S FILE IS CM2/G
 		m_u = c.u.to(u.g) #c is astropy.constants.u for atomic mass constant
 		mu_atm = mu_atm*m_u.value #grams
@@ -290,6 +290,7 @@ class AlbedoCode():
 
 		#FINALLY GET SCATTERING ALBEDO
 		new_alb = pd.DataFrame(columns=CH_ext.keys()[1:], index = self.standard_cld['P(bar)'].values)
+		print(CH_ext.keys()[1:])
 		for i in new_alb.keys():
 			alb_new_grid = 10**np.interp(np.log10(self.standard_cld['P(bar)']), np.log10(CH_alb['p'].values*1e-6), np.log10(CH_alb[i]))
 			new_alb[i] = alb_new_grid
